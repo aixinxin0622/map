@@ -1,28 +1,51 @@
 module.exports = {
-  ignorePatterns: ['dist'],
   env: {
     browser: true,
-    es2021: true,
     node: true,
+    es6: true
   },
-  extends: [
-    'standard',
-    'plugin:vue/vue3-recommended',
-    'plugin:@typescript-eslint/recommended',
-    // 需要放在最后才能覆盖和 prettier 冲突的规则
-    'plugin:prettier/recommended',
-  ],
   parser: 'vue-eslint-parser',
+  extends: [
+    'plugin:vue/vue3-recommended',
+    './.eslintrc-auto-import.json',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:prettier/recommended'
+  ],
   parserOptions: {
-    parser: '@typescript-eslint/parser',
-    ecmaVersion: 'latest',
+    ecmaVersion: '2020',
     sourceType: 'module',
+    project: './tsconfig.*?.json',
+    parser: '@typescript-eslint/parser'
   },
-  plugins: ['@typescript-eslint', 'vue', 'prettier'],
+  plugins: ['vue', '@typescript-eslint', 'import', 'promise', 'node', 'prettier'],
   rules: {
-    'vue/multi-word-component-names': 0,
-    'no-control-regex': 0,
-    'vue/html-indent': 'error',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
+
+    // vue
+    'vue/multi-word-component-names': 'off',
+    'vue/valid-define-props': 'off',
+    'vue/no-v-model-argument': 'off',
+    'prefer-rest-params': 'off',
+    // prettier
+    'prettier/prettier': 'error',
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        // 关闭空类型检查 {}
+        extendDefaults: true,
+        types: {
+          '{}': false,
+          Function: false
+        }
+      }
+    ]
   },
-  globals: { defineOptions: 'writable' },
-};
+  globals: {
+    DialogOption: 'readonly',
+    OptionType: 'readonly'
+  }
+}

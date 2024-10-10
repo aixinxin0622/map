@@ -1,19 +1,20 @@
-<script setup lang="ts"></script>
-
 <template>
-  <RouterView></RouterView>
+  <el-config-provider :locale="appStore.locale" :size="appStore.size">
+    <router-view />
+  </el-config-provider>
 </template>
 
-<style scoped lang="less">
-* {
-  padding: 0;
-  margin: 0;
-}
+<script setup lang="ts">
+import useSettingsStore from '@/store/modules/settings'
+import { handleThemeStyle } from '@/utils/theme'
+import useAppStore from '@/store/modules/app'
 
-html,
-body,
-#app {
-  width: 100%;
-  height: 100%;
-}
-</style>
+const appStore = useAppStore()
+
+onMounted(() => {
+  nextTick(() => {
+    // 初始化主题样式
+    handleThemeStyle(useSettingsStore().theme)
+  })
+})
+</script>
