@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 
 /**
  * Note: 路由配置项
@@ -28,21 +28,26 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: '/map',
     name: 'map',
     component: () => import('../views/map.vue')
+  },
+  {
+    path: '/echarts',
+    name: 'echarts',
+    component: () => import('../views/echarts.vue')
   }
-]
+];
 // 动态路由，基于用户权限动态去加载
-export const dynamicRoutes: RouteRecordRaw[] = []
+export const dynamicRoutes: RouteRecordRaw[] = [];
 
 const router = createRouter({
   history: createWebHistory(), //import.meta.env.VITE_APP_BASE_API
   routes: constantRoutes, // 刷新时，滚动条位置还原
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return savedPosition;
     } else {
-      return { top: 0 }
+      return { top: 0 };
     }
   }
-})
+});
 
-export default router
+export default router;

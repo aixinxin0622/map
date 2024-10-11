@@ -1,9 +1,9 @@
-import { UserConfig, ConfigEnv, defineConfig, loadEnv } from 'vite'
-import createPlugins from './vite/plugins'
-import path from 'path'
+import { UserConfig, ConfigEnv, defineConfig, loadEnv } from 'vite';
+import createPlugins from './vite/plugins';
+import path from 'path';
 
 export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
-  const env = loadEnv(mode, process.cwd())
+  const env = loadEnv(mode, process.cwd());
   return {
     base: env.VITE_APP_CONTEXT_PATH,
     resolve: {
@@ -40,7 +40,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
             AtRule: {
               charset: (atRule) => {
                 if (atRule.name === 'charset') {
-                  atRule.remove()
+                  atRule.remove();
                 }
               }
             }
@@ -127,5 +127,5 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
         'element-plus/es/components/tab-pane/style/css'
       ]
     }
-  }
-})
+  };
+});
