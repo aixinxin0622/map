@@ -3,7 +3,6 @@ import axios from 'axios';
 import '../utils/leaflet-heat';
 import 'leaflet-rotatedmarker';
 import '../utils/leaflet.canvas-markers';
-import { ElMessageBox } from 'element-plus';
 
 import typhoonIcon from '../assets/img/typhoon.gif';
 
