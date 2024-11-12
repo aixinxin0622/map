@@ -3,14 +3,39 @@ import axios from 'axios';
 import '../utils/leaflet-heat';
 import 'leaflet-rotatedmarker';
 import '../utils/leaflet.canvas-markers';
+import '../assets/pulse/L.Icon.Pulse.js';
+import '../assets/pulse/L.Icon.Pulse.css';
 
 import typhoonIcon from '../assets/img/typhoon.gif';
 
+const offsetLengthZoomMap = {
+  // 地图缩放等级对应关系
+  1: 19,
+  2: 18,
+  3: 17,
+  4: 16,
+  5: 15,
+  6: 14,
+  7: 13,
+  8: 12,
+  9: 11,
+  10: 10,
+  11: 9,
+  12: 8 + 1.5,
+  13: 7 + 1,
+  14: 6 + 0.5,
+  15: 5,
+  16: 4,
+  17: 3,
+  18: 2,
+  19: 1 + 0.5
+};
 const map = ref<L.Map>(); //地图对象
-const layer = ref<L.FeatureGroup>(); //基础图层
 const markerLayer = ref<L.canvasIconLayer>(); //marker图层
 const typhoonLayer = ref<L.FeatureGroup>(); // 台风图层
 const typhoonGifLayer = ref<L.FeatureGroup>(); // 动态台风圈图层
+const flashingPointLayer = ref<L.FeatureGroup>(); // 闪烁点图层
+const markPointLayer = ref<L.FeatureGroup>(); // 标记点图层
 
 const radioValue: any = ref(null);
 const typhoonBox: any = ref(false); // 台风操作框
@@ -18,10 +43,40 @@ const typhoonList: any = ref([]); // 台风名称列表
 const typhoonYear = ref(null); // 台风年份
 const typhoonName: any = ref(''); // 台风名称
 
-const buttonList = ref([
+const buttonList = reactive([
   {
     label: '台风',
     value: 1
+  },
+  {
+    label: '闪烁点',
+    value: 2
+  }
+  // {
+  //   label: '标记点',
+  //   value: 3
+  // }
+]);
+const lnglat = reactive([
+  {
+    lnglat: [20.818, 109.472],
+    name: '北部湾东北部沿岸'
+  },
+  {
+    lnglat: [21.45, 108.7],
+    name: '北部湾西北部沿岸'
+  },
+  {
+    lnglat: [40.47, 121.1],
+    name: '渤海北部沿岸'
+  },
+  {
+    lnglat: [38.1, 120.85],
+    name: '渤海海峡中南部沿岸'
+  },
+  {
+    lnglat: [38, 119.633],
+    name: '渤海南部沿岸'
   }
 ]);
 
@@ -58,10 +113,11 @@ const initMap = () => {
     this._setPosition(pos);
   };
 
-  layer.value = L.featureGroup().addTo(map.value);
   markerLayer.value = L.canvasIconLayer().addTo(map.value);
   typhoonGifLayer.value = L.featureGroup().addTo(map.value);
   typhoonLayer.value = L.featureGroup().addTo(map.value);
+  flashingPointLayer.value = L.featureGroup().addTo(map.value);
+  markPointLayer.value = L.featureGroup().addTo(map.value);
 
   map.value.on('click', function (e: any) {
     console.log('click', e.latlng);
@@ -72,12 +128,39 @@ const initMap = () => {
 };
 
 const radioChange = (data: any) => {
-  typhoonBox.value = false;
   clear();
   if (data.label == '台风') {
     dateChange();
     typhoonBox.value = true;
   }
+  if (data.label == '闪烁点') {
+    let zoom = map.value.getZoom();
+    lnglat.forEach((item: any) => {
+      const marker = L.marker([item.lnglat[0], item.lnglat[1]], {
+        icon: L.icon.pulse({
+          iconSize: [10, 10],
+          color: '#23d96e',
+          fillColor: '#23d96e',
+          heartbeat: 0.8,
+          animate: true
+        })
+      });
+      marker.bindPopup(item.name);
+      marker.addTo(flashingPointLayer.value);
+    });
+  }
+  // if (data.label == '标记点') {
+  //   // lnglat.forEach((item: any) => {
+  //   //   L.polyline([point,newPoint], {color: '#000',weight:0.5}).addTo(tagLayer);
+  //   //   const icon = L.divIcon({
+  //   //     className: 'ship-tag',
+  //   //     html: `<div  style="display: inline-block;width: auto;;background: #0fe3fe;border: #2ac06d 1px solid;white-space: nowrap;" title="${item.name}">${item.name}</div>`
+  //   //   });
+  //   //   const marker = L.marker([item.lnglat[0], item.lnglat[1]], { icon: icon });
+  //   //   marker.bindPopup(item.name);
+  //   //   marker.addTo(markPointLayer.value);
+  //   // });
+  // }
 };
 // 台风日期改变
 const dateChange = () => {
@@ -279,10 +362,12 @@ const typhoonTrajectory = (data: any) => {
   }, 100);
 };
 const clear = () => {
-  layer.value.clearLayers();
+  typhoonBox.value = false;
   markerLayer.value.clearLayers();
   typhoonLayer.value.clearLayers();
   typhoonGifLayer.value.clearLayers();
+  flashingPointLayer.value.clearLayers();
+  markPointLayer.value.clearLayers();
 };
 
 onMounted(() => {
