@@ -3,8 +3,9 @@ import axios from 'axios';
 import '../utils/leaflet-heat';
 import 'leaflet-rotatedmarker';
 import '../utils/leaflet.canvas-markers';
-import '../assets/pulse/L.Icon.Pulse.js';
-import '../assets/pulse/L.Icon.Pulse.css';
+import '@/utils/pulse/L.Icon.Pulse.js';
+import '@/utils/pulse/L.Icon.Pulse.css';
+import svgs from '../assets/img/hxqx.svg';
 
 import typhoonIcon from '../assets/img/typhoon.gif';
 
@@ -149,18 +150,6 @@ const radioChange = (data: any) => {
       marker.addTo(flashingPointLayer.value);
     });
   }
-  // if (data.label == '标记点') {
-  //   // lnglat.forEach((item: any) => {
-  //   //   L.polyline([point,newPoint], {color: '#000',weight:0.5}).addTo(tagLayer);
-  //   //   const icon = L.divIcon({
-  //   //     className: 'ship-tag',
-  //   //     html: `<div  style="display: inline-block;width: auto;;background: #0fe3fe;border: #2ac06d 1px solid;white-space: nowrap;" title="${item.name}">${item.name}</div>`
-  //   //   });
-  //   //   const marker = L.marker([item.lnglat[0], item.lnglat[1]], { icon: icon });
-  //   //   marker.bindPopup(item.name);
-  //   //   marker.addTo(markPointLayer.value);
-  //   // });
-  // }
 };
 // 台风日期改变
 const dateChange = () => {

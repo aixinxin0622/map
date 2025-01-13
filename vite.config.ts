@@ -15,18 +15,18 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
     },
     // https://cn.vitejs.dev/config/#resolve-extensions
     plugins: createPlugins(env, command === 'build'),
-    server: {
-      host: '0.0.0.0',
-      port: Number(env.VITE_APP_PORT),
-      proxy: {
-        [env.VITE_APP_BASE_API]: {
-          target: 'http://192.168.1.202:18080',
-          changeOrigin: true,
-          ws: true,
-          rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
-        }
-      }
-    },
+    // server: {
+    //   host: '0.0.0.0',
+    //   port: Number(env.VITE_APP_PORT),
+    //   proxy: {
+    //     [env.VITE_APP_BASE_API]: {
+    //       target: 'http://192.168.1.202:18080',
+    //       changeOrigin: true,
+    //       ws: true,
+    //       rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
+    //     }
+    //   }
+    // },
     css: {
       preprocessorOptions: {
         scss: {

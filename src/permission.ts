@@ -4,7 +4,7 @@ import 'nprogress/nprogress.css';
 
 NProgress.configure({ showSpinner: false });
 
-const whiteList = ['/map', '/echarts']; // 白名单
+const whiteList = ['/', '/echarts']; // 白名单
 
 router.beforeEach(async (to, from, next) => {
   if (whiteList.indexOf(to.path as string) !== -1) {

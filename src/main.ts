@@ -3,13 +3,22 @@ import { createApp } from 'vue';
 import 'virtual:uno.css';
 import '@/assets/styles/index.scss';
 import 'element-plus/theme-chalk/dark/css-vars.css';
+
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import '@/utils/pulse/L.Icon.Pulse';
+import '@/utils/pulse/L.Icon.Pulse.css';
+import 'leaflet-polylinedecorator'; //折线带箭头
+import '@geoman-io/leaflet-geoman-free'; //图形绘制
+import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import '@/utils/leaflet-heat';
 
 // App、router、store
 import App from './App.vue';
 import store from './store';
 import router from './router';
+
+import './utils/leaflet.canvas-markers';
 
 // 高亮组件
 // import 'highlight.js/styles/a11y-light.css';
@@ -45,6 +54,5 @@ app.use(router);
 app.use(store);
 app.use(i18n);
 app.use(VXETable);
-app.use(router);
 
 app.mount('#app');

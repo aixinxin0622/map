@@ -25,9 +25,9 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 // 公共路由
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: '/map',
-    name: 'map',
-    component: () => import('../views/map.vue')
+    path: '/',
+    name: 'home',
+    component: () => import('../views/home.vue')
   },
   {
     path: '/echarts',
