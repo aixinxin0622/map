@@ -33,6 +33,11 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: '/echarts',
     name: 'echarts',
     component: () => import('../views/echarts.vue')
+  },
+  {
+    path: '/typhoon',
+    name: 'typhoon',
+    component: () => import('../views/typhoon.vue')
   }
 ];
 // 动态路由，基于用户权限动态去加载

@@ -98,21 +98,21 @@ const initMap = () => {
   L.tileLayer(`${url}&T=vec_w&tk=5a0b14f38b73d08668496bdd51375af2`, {
     subdomains: subdomains
   }).addTo(map.value);
-  L.Tooltip.prototype._animateZoom = function (e: any) {
-    if (!this._map) {
-      return;
-    }
-    let pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center);
-    this._setPosition(pos);
-  };
+  // L.Tooltip.prototype._animateZoom = function (e: any) {
+  //   if (!this._map) {
+  //     return;
+  //   }
+  //   let pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center);
+  //   this._setPosition(pos);
+  // };
 
-  L.Tooltip.prototype._updatePosition = function () {
-    if (!this._map) {
-      return;
-    }
-    let pos = this._map.latLngToLayerPoint(this._latlng);
-    this._setPosition(pos);
-  };
+  // L.Tooltip.prototype._updatePosition = function () {
+  //   if (!this._map) {
+  //     return;
+  //   }
+  //   let pos = this._map.latLngToLayerPoint(this._latlng);
+  //   this._setPosition(pos);
+  // };
 
   markerLayer.value = L.canvasIconLayer().addTo(map.value);
   typhoonGifLayer.value = L.featureGroup().addTo(map.value);

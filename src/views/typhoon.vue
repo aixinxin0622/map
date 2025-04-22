@@ -1,6 +1,6 @@
 <template>
   <div class="homes">
-    <div class="home" id="map"></div>
+    <div class="home" id="typhoonMap"></div>
     <div class="typhoon">
       <el-select v-model="value" placeholder="请选择" @change="mychange">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
@@ -57,7 +57,7 @@ export default {
   methods: {
     // 初始化 地图
     setupMap() {
-      this.map = L.map('map', {
+      this.map = L.map('typhoonMap', {
         attributionControl: false,
         zoomControl: false,
         maxZoom: 19,

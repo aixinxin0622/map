@@ -44,25 +44,23 @@ export function mapMarkerTagInit(Map, layer) {
  * @param { Object } style   //标签样式，规则采用百度地图style规则 。*已废弃不准传
  * @returns
  */
-export function updateMapMarkerTag(
-  shipList,
-  offset = -10,
-  style = { backgroundColor: ' rgb(255 255 255 / 75%)', 'border': '1px solid rgb(255 255 255 / 80%)' }
-) {
-  // removeOverlay('markerTag')
-  tagLayer.clearLayers();
+export function updateMapMarkerTag(shipList) {
+  tagLayer ? tagLayer.clearLayers() : '';
+  if (!map) return;
   let zoom = map.getZoom();
-  //console.log()
-  if (zoom <= 13) {
+  if (zoom < 10) {
     return;
   }
   newShipList = [];
-  // console.log(shipList)
   for (let i = 0; i < shipList.length; i++) {
     // 获取 84转百度 经纬度
-    let [lng, lat] = wgs84ToBD(parseFloat(shipList[i].lon), parseFloat(shipList[i].lat), false);
+    let [lng, lat] = wgs84ToBD(parseFloat(shipList[i].longitude), parseFloat(shipList[i].latitude), false);
+    let isDisplaying = map.getBounds().contains([lat, lng]);
+    if (!isDisplaying) {
+      continue;
+    }
     // 获取名称字符串
-    let str = shipList[i].name ? shipList[i].name : shipList[i].mmsi;
+    let str = shipList[i].shipName ? shipList[i].shipName : shipList[i].mmsi;
     //获取船舶点位
     let point = [lat, lng];
 
@@ -74,60 +72,25 @@ export function updateMapMarkerTag(
     //声明 将要渲染的数据对象
     let newShipTarget = { ...shipList[i] };
     // 设置偏移右上角经纬度
-    newShipTarget.lon = lng - offsetLengthLngD;
-    newShipTarget.lat = lat - offsetLengthLatD;
+    newShipTarget.longitude = lng - offsetLengthLngD;
+    newShipTarget.latitude = lat - offsetLengthLatD;
     //获取无碰撞旋转后的角度点位
     let [is, newPoint] = getAngleType(newShipTarget, getLenPx(str, 15.636) + 10 + 2); //宽度算上 padding,border
     //判断是否渲染
     if (is) {
       continue;
     }
-    // console.log('point:',point,'newPoint：',newPoint)
-    var polyline = L.polyline([point, newPoint], { color: '#000', weight: 0.5 }).addTo(tagLayer);
-    if (shipList[i].targettype === 3) {
-      //雷达目标
-      var icon = L.divIcon({
-        className: 'ship-tag',
-        html: `<div  style="display: inline-block;width: auto;;background: #fffaa7;border: #ffda4b 1px solid;white-space: nowrap;" title="${str.length}">${shipList[i].targetid}</div>`
-        // , iconAnchor: [50,50],
-        // iconSize:[100,100],
-      });
-      var marker = L.marker(newPoint, { icon: icon }).addTo(tagLayer);
-    } else {
-      //船舶目标
-      var icon = L.divIcon({
-        className: 'ship-tag',
-        html: `<div  style="display: inline-block;width: auto;;background: #0fe3fe;border: #2ac06d 1px solid;white-space: nowrap;" title="${str.length}">${str}</div>`
-        // , iconAnchor: [50,50],
-        // iconSize:[100,100],
-      });
-      var marker = L.marker(newPoint, { icon: icon }).addTo(tagLayer);
-    }
-    // // --- 渲染标签 ---
-    // let offsetPoint = newPoint
-    // let label  = new BMap.Label(str,{
-    //   position:offsetPoint,
-    //   offset: new BMap.Size(0, offset)
-    // })
-    // label.imei = '船舶名称标签'
-    // label.setZIndex(9999)
-    // label.setStyle(style)
-    // label.markName = 'markerTag'
-    // let pois = []
-    //     pois.push(point);
-    //     pois.push(offsetPoint);
-    //
-    // let polyline =new BMap.Polyline(pois, {
-    //     enableEditing: false,//是否启用线编辑，默认为false
-    //     //enableClicking: true,//是否响应点击事件，默认为true
-    //     strokeWeight:'1',//折线的宽度，以像素为单位
-    //     strokeOpacity: 1,//折线的透明度，取值范围0 - 1
-    //     strokeColor:"#222" //折线颜色
-    // });
-    // polyline.imei = '船舶名称标签'
-    // polyline.markName = 'markerTag'
-    // map.addOverlay(label)
-    // map.addOverlay(polyline)
+
+    L.polyline([point, newPoint], {
+      color: '#000',
+      weight: 0.5
+    }).addTo(tagLayer);
+
+    var icon = L.divIcon({
+      className: 'ship-tag',
+      html: `<div  style="display: inline-block;width: auto;background: rgba(255,255,255,0.22);border: 1px solid #9BCDE4;white-space: nowrap;color:#fff;padding:0 5px;">${str}</div>`
+    });
+    L.marker(newPoint, { icon: icon }).addTo(tagLayer);
   }
 }
 /**
@@ -137,7 +100,7 @@ export function updateMapMarkerTag(
  * @returns
  */
 function getAngleType(item, length) {
-  let [lng, lat] = [item.lon, item.lat];
+  let [lng, lat] = [item.longitude, item.latitude];
   // console.log(item,[ lng , lat ])
   //经纬度 转 平面坐标 X = Lng , y = Lat
   let { x, y } = getPixel(lng, lat);
@@ -254,32 +217,7 @@ function getLAIAngle(lngType, lonType, num) {
   };
   return [obj[lngType](num), obj[lonType](num)];
 }
-/**
- * 删除覆盖物
- * @param { String } imei
- * @returns undefined
- */
-function removeOverlay(imei) {
-  if (imei == '') {
-    //取消所有覆盖物
-    map.clearOverlays();
-  } else {
-    if (map === null) {
-      return;
-    }
-    let allOverlay = map.getOverlays();
-    //console.log(allOverlay);
-    //console.log(this.map.getPanes());
-    for (let i = 0; i < allOverlay.length; i++) {
-      if (allOverlay[i].markName === imei) {
-        //allOverlay[i].enableMassClear();
-        // console.log(allOverlay[i])
-        //console.log('删除执行')
-        map.removeOverlay(allOverlay[i]); //
-      }
-    }
-  }
-}
+
 /**
  * 获取字符在屏幕中的像素
  * @param { String } str

@@ -9,9 +9,14 @@ import 'leaflet/dist/leaflet.css';
 import '@/utils/pulse/L.Icon.Pulse';
 import '@/utils/pulse/L.Icon.Pulse.css';
 import 'leaflet-polylinedecorator'; //折线带箭头
+import 'leaflet.markercluster'; //聚合
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import '@geoman-io/leaflet-geoman-free'; //图形绘制
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import '@/utils/leaflet.canvas-markers';
 import '@/utils/leaflet-heat';
+import 'leaflet-rotatedmarker';
+import '@/utils/leaflet.motion';
 
 // App、router、store
 import App from './App.vue';
